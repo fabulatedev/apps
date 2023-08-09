@@ -1,0 +1,208 @@
+
+<html>
+<head>
+<style>
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+    }
+    .component {
+        height: 100%;
+        width: 100%;
+    }
+    .section {
+        display: flex;
+        overflow: auto;
+    }
+
+    .header, .footer, .body {
+        align-items: center;
+    }
+
+    .lefter, .sider {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .section > * {
+        margin: 5px !important;
+        max-height: 100%;
+    }
+
+    .body {
+        display: block;
+    }
+
+    .canvas-header {
+        grid-area: header;
+        flex-direction: row;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
+    
+    .canvas-lefter {
+        grid-area: lefter;
+        flex-direction: column;
+        background: #fafafa;
+        border-right: 1px solid rgba(5, 5, 5, 0.06);
+        align-items: stretch;
+    }
+    
+    .canvas-body {
+        grid-area: body;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .canvas-body > div[data-testid=tsEmbed] {
+        flex: 1 1 0;
+        height: 100%;
+        margin: 0;
+    }
+    
+    .canvas-righter {
+        grid-area: righter;
+        flex-direction: column;
+        background: #fafafa;
+        border-left: 1px solid rgba(5, 5, 5, 0.06);
+        align-items: stretch;
+    }
+    
+    .canvas-footer {
+        grid-area: footer;
+        flex-direction: row;
+        background: #fafafa;
+    }
+</style>
+<script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.production.min.js"
+></script>
+<script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+></script>
+<script
+    crossorigin
+    src="https://unpkg.com/@ant-design/icons@5.1.4/dist/index.umd.js">
+</script>
+<script
+    crossorigin
+    src="https://cdn.jsdelivr.net/gh/idiomicdev/hosted-libs@main/rjv.js">
+</script>
+<script crossorigin src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+<script
+    crossorigin
+    src="https://unpkg.com/antd@5.6.4/dist/antd.min.js"
+></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script 
+    crossorigin
+    src="https://unpkg.com/fetch-stream-observable@1.1.2/dist/fetch-stream-observable.min.js">
+</script>
+<script type="text/jsx">
+  var fetchObservable = window.fetchObservable.default;  
+  window.apiToken = "Generating key ..."
+  
+
+
+
+
+
+
+
+const MyComponent = () => {
+  const [json, setJson] = React.useState([]);
+  const [collapsed, setCollapsed] = React.useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [commentary, setCommentary] = React.useState("");
+
+  const handleSearch = (value) => {
+    const url = `https://www.wikiart.org/en/api/2/PaintingSearch?term=${value}`;
+    fetchObservable(url).subscribe((response) => {
+      const data = response.data.slice(0, 5);
+      const images = data.map((item) => (
+        <div>
+          <img src={item.image} alt={item.title} />
+        </div>
+      ));
+      setJson(images);
+    });
+  };
+
+  const handleMenuClick = () => {
+    setCollapsed(!collapsed);
+  };
+
+  const handleCriticClick = () => {
+    setModalVisible(true);
+    const currentImage = document.querySelector("#gallery .slick-current img");
+    const imageLink = currentImage ? currentImage.src : "";
+    const agentUrl = "http://localhost:3000/api/agents/run?agentId=4582868858";
+    const params = {
+      image_link: imageLink
+    };
+    fetchObservable(agentUrl, {
+      method: "POST",
+      body: JSON.stringify(params),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${window.apiToken}`
+      }
+    }).subscribe((response) => {
+      setCommentary(response);
+    });
+  };
+
+  const handleModalClose = () => {
+    setModalVisible(false);
+    setCommentary("");
+  };
+
+  return (
+    <antd.ConfigProvider theme={{ ...themeConfig }}>
+      <antd.Layout className="component">
+        <antd.Layout.Header className="section header">
+          <antd.Button id="menu" icon={<icons.MenuOutlined />} onClick={handleMenuClick} />
+          <antd.Input id="search" placeholder="Search" onPressEnter={(e) => handleSearch(e.target.value)} />
+        </antd.Layout.Header>
+        <antd.Layout className="content">
+          <antd.Layout.Sider collapsedWidth={0} collapsible className="section lefter" collapsed={collapsed}>
+            <antd.Button id="critic" onClick={handleCriticClick}>critique</antd.Button>
+          </antd.Layout.Sider>
+          <antd.Layout.Content className="section body">
+            <antd.Carousel id="gallery">
+              {json}
+            </antd.Carousel>
+          </antd.Layout.Content>
+        </antd.Layout>
+      </antd.Layout>
+      <antd.Modal visible={modalVisible} onCancel={handleModalClose} footer={null}>
+        {commentary}
+      </antd.Modal>
+    </antd.ConfigProvider>
+  );
+};
+
+const themeConfig = {
+        token: {
+            colorPrimary: "#1890ff",
+            borderRadius: 6,
+        },
+        algorithm: antd.theme.darkAlgorithm,
+        components: {
+            Layout: {
+                colorBgHeader: "#001529",
+            },
+            Carousel: {
+                colorBgContainer: "#ccc"
+            }
+        }
+    };
+  ReactDOM.render(<MyComponent />, document.body);
+</script>
+</head>
+<body>
+</body>
+</html>
