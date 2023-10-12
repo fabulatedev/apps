@@ -137,6 +137,7 @@ const MyComponent = () => {
       if (message.type !== 'navigate') {
         return;
       }
+      debugger;
       const url = message.data;
       if (url.includes('/lightning/r/Account/')) {
         const accountName = await parentFrame.sendMessage({
