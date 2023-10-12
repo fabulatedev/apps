@@ -143,7 +143,8 @@ const MyComponent = () => {
         setIssueId(url.split('/browse/')[1]);
         return;
       }
-      const urlParams = new URLSearchParams(url);
+      const queryString = url.split('?')[1];
+      const urlParams = new URLSearchParams(queryString);
       const issueId = urlParams.get('selectedIssue');
       if (issueId) {
         setIssueId(issueId);
