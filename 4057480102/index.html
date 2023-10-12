@@ -157,7 +157,12 @@ const MyComponent = () => {
   return (
     <>
       {/* Begin TriggerAction */}
-      <iframe src={'https://www.linkedin.com/search/results/companies/?keywords=' + companyName}></iframe>
+      {(companyName) 
+        ? <iframe src={'https://www.linkedin.com/search/results/companies/?keywords=' + companyName}></iframe>
+        : <antd.Typography>
+            No company to view on this page
+        </antd.Typography>
+      }
       {/* End TriggerAction */}
     </>
   );
