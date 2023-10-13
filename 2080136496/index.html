@@ -161,7 +161,7 @@ const MyComponent = () => {
   const [result, setResult] = React.useState('');
 
   React.useEffect(() => {
-    fetch("http://fabulate.dev/api/agents/run?agentId=378465045215969345", {
+    fetch("https://fabulate.dev/api/agents/run?agentId=378465045215969345", {
       method: "POST",
       body: JSON.stringify({
         prompt: prompt,
