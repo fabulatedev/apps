@@ -150,7 +150,9 @@ const MyComponent = () => {
       }
       if (message.type === 'selectionchange') {
         const selectedText = message.data;
-        setSelectedText(selectedText);
+        if (selectedText) {
+            setSelectedText(selectedText);
+        }
       }
     });
   }, []);
