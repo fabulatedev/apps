@@ -176,9 +176,11 @@ const MyComponent = () => {
     });
   }, [prompt]);
 
-  return <MarkdownToJSX style={{ color: '#c3c3c3'}}>
-  {result}
-  </MarkdownToJSX>;
+  return <div style={{ margin: '20px' }}>
+    <MarkdownToJSX style={{ color: '#c3c3c3' }}>
+    {result}
+    </MarkdownToJSX>
+  </div>;
 };
 
 
