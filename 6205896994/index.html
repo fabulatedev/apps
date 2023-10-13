@@ -165,10 +165,10 @@ const MyComponent = () => {
   }, []);
 
   const titleLower = title.toLowerCase();
-  const jobFunction = titleLower.includes('engineer')
-    ? 'software-engineer'
-    : titleLower.includes('engineering')
+  const jobFunction = titleLower.includes('engineering')
     ? 'software-engineering-manager'
+    : titleLower.includes('engineer')
+    ? 'software-engineer'
     : titleLower.includes('sales')
     ? 'sales'
     : titleLower.includes('product')
