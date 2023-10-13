@@ -144,7 +144,7 @@ const MyComponent = () => {
         return;
       }
       const url = message.data;
-      if (url.includes('/candidate_details/')) {
+      if (url.includes('/people/')) {
         const name = await parentFrame.sendMessage({
           type: 'getText',
           data: {
