@@ -144,7 +144,7 @@ const MyComponent = () => {
         return;
       }
       const url = message.data;
-      if (url.includes('/jobs/view/')) {
+      if (url.includes('/jobs/')) {
         const title = await parentFrame.sendMessage({
           type: 'getText',
           data: {
