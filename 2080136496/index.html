@@ -150,7 +150,7 @@ const MyComponent = () => {
         setFullText(_fullText);
       }
       if (message.type === 'selectionchange') {
-        const { selectedText, fullText } = message.data;
+        const selectedText = message.data;
         setSelectedText(selectedText);
       }
     });
