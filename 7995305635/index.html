@@ -1,0 +1,182 @@
+
+<html>
+<head>
+<style>
+    body {
+        height: 100vh;
+        width: 100vw;
+        margin: 0;
+    }
+    .component {
+        height: 100%;
+        width: 100%;
+    }
+    .section {
+        display: flex;
+        overflow: auto;
+    }
+
+    iframe {
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    .center {
+        margin: auto;
+        text-align: center;
+    }
+
+    .header, .footer, .body {
+        align-items: center;
+    }
+
+    .lefter, .sider {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .section > * {
+        margin: 5px !important;
+        max-height: 100%;
+    }
+
+    .ant-select {
+        min-width: 120px;
+    }
+
+    .body {
+        display: block;
+    }
+
+    .canvas-header {
+        grid-area: header;
+        flex-direction: row;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03), 0 1px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+    }
+    
+    .canvas-lefter {
+        grid-area: lefter;
+        flex-direction: column;
+        background: #fafafa;
+        border-right: 1px solid rgba(5, 5, 5, 0.06);
+        align-items: stretch;
+    }
+    
+    .canvas-body {
+        grid-area: body;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+
+    .canvas-body > div[data-testid=tsEmbed] {
+        flex: 1 1 0;
+        height: 100%;
+        margin: 0;
+    }
+    
+    .canvas-righter {
+        grid-area: righter;
+        flex-direction: column;
+        background: #fafafa;
+        border-left: 1px solid rgba(5, 5, 5, 0.06);
+        align-items: stretch;
+    }
+    
+    .canvas-footer {
+        grid-area: footer;
+        flex-direction: row;
+        background: #fafafa;
+    }
+</style>
+<script
+    crossorigin
+    src="https://unpkg.com/react@18/umd/react.production.min.js"
+></script>
+<script
+    crossorigin
+    src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+></script>
+<script
+    crossorigin
+    src="https://unpkg.com/@ant-design/icons@5.1.4/dist/index.umd.js">
+</script>
+<script
+    crossorigin
+    src="https://unpkg.com/promise-postmessage@1.2.0/dist/index.js"
+></script>
+<script
+    crossorigin
+    src="https://cdn.jsdelivr.net/gh/idiomicdev/hosted-libs@main/rjv.js">
+</script>
+<script crossorigin src="https://unpkg.com/dayjs@1.11.9/dayjs.min.js"></script>
+<script crossorigin src="https://unpkg.com/markdown-to-jsx@7.3.2/dist/index.umd.js"></script>
+<script
+    crossorigin
+    src="https://unpkg.com/antd@5.6.4/dist/antd.min.js"
+></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script 
+    crossorigin
+    src="https://unpkg.com/fetch-stream-observable@1.1.2/dist/fetch-stream-observable.min.js">
+</script>
+<script 
+    crossorigin
+    src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js">
+</script>
+<script type="text/jsx">
+  var fetchObservable = window.fetchObservable.default;  
+  window.apiToken = "6UXtFVSDTe"
+  
+
+
+
+
+
+function MyComponent() {
+  const [issueId, setIssueId] = React.useState('');
+  
+  React.useEffect(() => {
+    function setIssueIdFromUrl(url) {
+      if (url.includes('/browse/')) {
+        setIssueId(url.split('/browse/')[1]);
+        return;
+      }
+      const queryString = url.split('?')[1];
+      const urlParams = new URLSearchParams(queryString);
+      const issueId = urlParams.get('selectedIssue');
+      if (issueId) {
+        setIssueId(issueId);
+      }
+    }
+    
+    (async () => {
+      const url = await parentFrame.sendMessage({
+        type: 'getCurrentUrl',
+        data: {}
+      });
+      setIssueIdFromUrl(url);
+    })();
+    
+    parentFrame.onMessage((message) => {
+      if (message.type !== 'navigate') {
+        return;
+      }
+      const url = message.data;
+      setIssueIdFromUrl(url);
+    });
+  }, []);
+  
+  return (
+    (issueId) ? <iframe src={'https://app.glean.com/frame/results?q=' + issueId}></iframe> : <antd.Empty className="center" description={<span>Please query to see results</span>} />
+  );
+}
+
+
+  ReactDOM.render(<MyComponent />, document.body);
+</script>
+</head>
+<body>
+</body>
+</html>
